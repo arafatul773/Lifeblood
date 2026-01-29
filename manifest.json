@@ -1,0 +1,108 @@
+{
+  "name": "Lifeblood CTG",
+  "short_name": "Lifeblood",
+  "description": "Blood donation platform for Chattogram, Bangladesh",
+  "lang": "bn-BD",
+  "dir": "ltr",
+
+  "start_url": "/",
+  "scope": "/",
+  "scope_extensions": ["/admin/", "/donor/"],
+
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
+
+  "theme_color": "#E53935",
+  "background_color": "#ffffff",
+
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+
+  "categories": ["health", "medical", "social", "non-profit"],
+
+  "shortcuts": [
+    {
+      "name": "Find Blood Donor",
+      "short_name": "Find",
+      "url": "/donors",
+      "icons": [{ "src": "/icons/find.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Register as Donor",
+      "short_name": "Donate",
+      "url": "/register",
+      "icons": [{ "src": "/icons/donate.png", "sizes": "192x192" }]
+    }
+  ],
+
+  "file_handlers": [
+    {
+      "action": "/import",
+      "accept": {
+        ".csv": ["text/csv"],
+        ".xlsx": ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
+      }
+    }
+  ],
+
+  "launch_handler": {
+    "client_mode": "single_instance"
+  },
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+lifeblood",
+      "url": "/?source=%s"
+    }
+  ],
+
+  "prefer_related_applications": false,
+
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.lifeblood.ctg"
+    }
+  ],
+
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+
+  "iarc_rating_id": "e10b1234-5678-90ab-cdef-1234567890ab",
+
+  "widgets": [
+    {
+      "name": "Nearby Blood Donors",
+      "description": "Quick view of available blood donors",
+      "src": "/widget.html",
+      "type": "home_screen"
+    }
+  ],
+
+  "edge_side_panel": {
+    "preferred_width": 400,
+    "url": "/panel"
+  },
+
+  "note_taking": {
+    "new_note_url": "/notes/new"
+  }
+}

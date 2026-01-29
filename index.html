@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="/manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifeblood — রক্তে বাঁচে জীবন</title>
+<link rel="canonical" href="https://lifebloodctg.netlify.app/">
+<style>
+html, body {height:100%; margin:0; font-family:system-ui,sans-serif; background:#0f172a; color:#e5e7eb;}
+.page-wrapper {min-height:100vh; display:flex; flex-direction:column; padding:16px; box-sizing:border-box;}
+
+/* Hero */
+.app-title {text-align:center; margin:20px 0; cursor:pointer;}
+.app-title h1 {font-size:10vw; max-font-size:80px; min-font-size:32px; font-weight:700; color:#ffffff; margin:0; letter-spacing:1px; animation:glow 2s infinite alternate;}
+.app-title p {font-size:4vw; max-font-size:24px; min-font-size:14px; color:#ffffff; opacity:0.9; margin-top:4px; letter-spacing:0.5px; animation:glow 2s infinite alternate;}
+@keyframes glow {0% { text-shadow:0 0 5px #ffffff,0 0 10px #ffffff; }50% { text-shadow:0 0 10px #38bdf8,0 0 20px #38bdf8;}100% { text-shadow:0 0 5px #ffffff,0 0 10px #ffffff;}}
+@media (max-width:600px){ .app-title h1{font-size:14vw;} .app-title p{font-size:6vw;} }
+
+/* Boxes & forms */
+h2,h3,h4{margin:8px 0;}
+.box { background:#020617; padding:16px; border-radius:12px; margin-bottom:16px; }
+input,select,button { width:100%; padding:12px; margin-top:8px; border-radius:8px; border:none; font-size:16px; box-sizing:border-box; }
+button { background:#dc2626; color:white; cursor:pointer; transition:0.2s; }
+button:hover { background:#b91c1c; }
+.hidden{display:none;}
+
+/* Donor Cards */
+.donor-card { background:#111827; border-radius:12px; padding:14px 16px; margin-bottom:14px; border-left:4px solid #f87171; box-shadow:0 2px 6px rgba(0,0,0,0.3); transition: transform 0.2s; position:relative;}
+.donor-card:hover { transform: translateY(-2px);}
+.donor-card p { margin:4px 0; font-size:0.95rem; color:#e5e7eb; display:flex; align-items:center; gap:6px; }
+.donor-card p span { color:#94a3b8; font-weight:500; min-width:120px; display:inline-block; }
+.donor-card p b { color:#f87171; font-weight:700; }
+.blood-badge { display:inline-block; padding:2px 6px; border-radius:6px; background:#f87171; color:#000; font-weight:600; font-size:0.85rem; margin-left:6px; cursor:default; position:relative; }
+
+/* Tooltip */
+.blood-badge::after { content: attr(data-tooltip); position:absolute; bottom:125%; left:50%; transform:translateX(-50%); background:#111827; color:#f87171; padding:4px 8px; border-radius:6px; font-size:0.8rem; white-space:nowrap; box-shadow:0 0 5px #000; z-index:10; opacity:0; transition:opacity 0.2s;}
+.blood-badge:hover::after { opacity:0.95; }
+
+/* Editable date */
+.edit-date { background:#020617; color:#f87171; border:1px solid #f87171; border-radius:6px; padding:2px 4px; font-size:0.9rem; width:140px; }
+.edit-date:focus { outline:none; box-shadow:0 0 5px #f87171;}
+
+/* Footer */
+footer { text-align:center; padding:16px 10px; background:#111827; color:#9ca3af; font-size:12px; border-top:1px solid rgba(255,255,255,0.08);}
+footer .footer-sub {margin-top:6px; font-size:11px; color:#6b7280;}
+</style>
+<!-- PWA Manifest -->
+
+<!-- SEO -->
+<meta name="description" content="Lifeblood CTG — রক্তদানের মাধ্যমে জীবন বাঁচানোর একটি মানবিক প্ল্যাটফর্ম">
+<meta name="keywords" content="blood donation, blood donor, lifeblood, Chattogram, রক্তদান">
+<meta name="author" content="Lifeblood CTG">
+
+<!-- PWA Theme -->
+<meta name="theme-color" content="#dc2626">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- Hero -->
+  <div class="app-title hero" id="title">
+    <h1>Lifeblood</h1>
+    <p>রক্তে বাঁচে জীবন</p>
+  </div>
+
+  <p style="text-align:center;font-size:18px;">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيم</p>
+
+  <!-- Donor Registration -->
+  <div class="box">
+    <h3>🩸 Donor Registration</h3>
+    <form id="donorForm">
+      <input id="name" placeholder="Name" required>
+      <input id="phone" placeholder="Mobile (01XXXXXXXXX)" required>
+      <input id="address" placeholder="Address" required>
+      <select id="blood" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <input id="lastDonate" type="date" required>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <!-- Filter -->
+  <div class="box">
+    <h3>Filter by Blood Group</h3>
+    <select id="filterBlood">
+      <option value="">All</option>
+      <option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option>
+      <option>O+</option><option>O-</option>
+      <option>AB+</option><option>AB-</option>
+    </select>
+  </div>
+
+  <!-- Donor List -->
+  <div id="donorSection" class="box">
+    <h3>✅ Available Donors</h3>
+    <div id="donorList"></div>
+  </div>
+
+  <!-- Admin Login -->
+  <div id="adminLogin" class="hidden">
+    <h3>🔑 Admin Login</h3>
+    <input id="adminId" placeholder="Admin ID">
+    <input id="adminPass" placeholder="Password" type="password">
+    <button id="adminLoginBtn">Login</button>
+    <p id="adminMsg"></p>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="hidden">
+    <h3>🛠 Admin Approval</h3>
+    <h4>Pending Donors</h4>
+    <div id="pendingList"></div>
+    <h4>Changed Dates</h4>
+    <div id="dateChangeList"></div>
+    <button id="exportCSV">📥 Export Donor List</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div>© <span id="year"></span> Lifeblood — Save Life, Share Blood</div>
+    <div class="footer-sub">Developed with ❤️ for Humanity</div>
+  </footer>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = { apiKey:"AIzaSyDK2AcauUw2SHhGpSF0RNw-C0jL_3ccyvo", authDomain:"lifeblood-5f20e.firebaseapp.com", projectId:"lifeblood-5f20e", storageBucket:"lifeblood-5f20e.appspot.com", messagingSenderId:"1084816260035", appId:"1:1084816260035:web:eaa6c0fd25e3e7ecd29b76"};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const ADMIN_ID="Arafatul576", ADMIN_PASS="ArafaTul11";
+const donorForm=document.getElementById("donorForm"), msg=document.getElementById("msg"), donorList=document.getElementById("donorList"), filterBlood=document.getElementById("filterBlood"), adminLoginDiv=document.getElementById("adminLogin"), adminPanelDiv=document.getElementById("adminPanel"), pendingList=document.getElementById("pendingList"), dateChangeList=document.getElementById("dateChangeList"), adminMsg=document.getElementById("adminMsg"), adminLoginBtn=document.getElementById("adminLoginBtn"), exportBtn=document.getElementById("exportCSV");
+
+function eligible(date){ return (Date.now()-new Date(date))/(1000*60*60*24) >=90; }
+function nextEligibleDate(date){ let d=new Date(date); d.setDate(d.getDate()+90); return d; }
+function formatDate(d){ const dt = new Date(d); return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+
+donorForm.addEventListener("submit", async e=>{
+  e.preventDefault();
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const address=document.getElementById("address").value.trim();
+  const blood=document.getElementById("blood").value;
+  const lastDonate=document.getElementById("lastDonate").value;
+  if(!name||!phone||!address||!blood||!lastDonate){ msg.innerText="❌ সব ফিল্ড পূরণ করো"; return;}
+  try{ await addDoc(collection(db,"donors"), {name, phone, address, blood, lastDonate, approved:false, dateChanged:false, createdAt:new Date()});
+    msg.innerHTML="<span style='color:#22c55e'>✅ Successfully submitted. Admin approval pending.</span>";
+    donorForm.reset(); loadDonors(); loadPending(); 
+  }catch(e){ msg.innerText="❌ Error: "+e.message;}
+});
+
+async function loadDonors(){
+  donorList.innerHTML="";
+  const q=query(collection(db,"donors"), where("approved","==",true));
+  const snap=await getDocs(q);
+  snap.forEach(d=>{
+    const x=d.data(); if(filterBlood.value && x.blood!=filterBlood.value) return;
+    const days=eligible(x.lastDonate)?"Eligible":"Recently Donated";
+    const nextDate=nextEligibleDate(x.lastDonate);
+    const div=document.createElement("div"); div.className="donor-card";
+    div.innerHTML=`<p>👤 <span>নাম:</span> <b>${x.name}</b></p>
+      <p>🩸 <span>রক্ত গ্রুপ:</span> ${x.blood} <span class="blood-badge" data-tooltip="" style="background:${days==="Eligible"?"#22c55e":"#f87171"}; color:#000">${days}</span></p>
+      <p>📞 <span>নাম্বার:</span> ${x.phone}</p>
+      <p>🏠 <span>ঠিকানা:</span> ${x.address}</p>
+      <p>📅 <span>শেষ রক্তদান:</span> <input type="date" class="edit-date" value="${x.lastDonate}" onchange="requestDateChange('${d.id}', this.value)"></p>`;
+    donorList.appendChild(div);
+    updateCountdown(div.querySelector(".blood-badge"), nextDate);
+  });
+}
+
+// Live countdown for tooltip
+function updateCountdown(el, targetDate){
+  function refresh(){ 
+    const diff=Math.max(0,new Date(targetDate)-new Date());
+    const days=Math.floor(diff/1000/60/60/24);
+    const hrs=Math.floor((diff/1000/60/60)%24);
+    const mins=Math.floor((diff/1000/60)%60);
+    el.setAttribute("data-tooltip", diff>0?`Next eligible in ${days}d ${hrs}h ${mins}m`:'Eligible now');
+  }
+  refresh();
+  setInterval(refresh,60000); // refresh every minute
+}
+
+// Date change request
+window.requestDateChange = async (id,newDate)=>{ await updateDoc(doc(db,"donors",id),{dateChanged:true, requestedDate:newDate}); loadDateChangeList(); }
+
+filterBlood.addEventListener("change", loadDonors);
+
+// Triple tap admin
+let tap=0; document.getElementById("title").addEventListener("click", ()=>{tap++; if(tap===3){adminLoginDiv.classList.toggle("hidden"); tap=0;}});
+
+// Admin login
+adminLoginBtn.addEventListener("click", ()=>{
+  const id=document.getElementById("adminId").value;
+  const pass=document.getElementById("adminPass").value;
+  if(id===ADMIN_ID && pass===ADMIN_PASS){ adminMsg.innerText="✅ Logged in!"; adminLoginDiv.classList.add("hidden"); adminPanelDiv.classList.remove("hidden"); loadPending(); loadDateChangeList();}
+  else{ adminMsg.innerText="❌ Invalid ID or Password"; }
+});
+
+// Pending donors
+async function loadPending(){
+  pendingList.innerHTML=""; 
+  const q=query(collection(db,"donors"), where("approved","==",false));
+  const snap=await getDocs(q); snap.forEach(d=>{
+    const x=d.data();
+    pendingList.innerHTML+=`<div class="donor-card">${x.name} (${x.blood}) 
+      <button onclick="approve('${d.id}')">Approve</button> 
+      <button onclick="reject('${d.id}')">Reject</button>
+    </div>`;
+  });
+}
+window.approve=async id=>{ await updateDoc(doc(db,"donors",id),{approved:true}); loadPending(); loadDonors();}
+window.reject=async id=>{ await updateDoc(doc(db,"donors",id),{approved:false}); loadPending(); loadDonors();}
+
+// Date change list
+async function loadDateChangeList(){
+  dateChangeList.innerHTML="";
+  const q=query(collection(db,"donors"), where("dateChanged","==",true));
+  const snap=await getDocs(q); snap.forEach(d=>{
+    const x=d.data();
+    dateChangeList.innerHTML+=`<div class="donor-card">${x.name} (${x.blood}) requested: ${x.requestedDate}
+      <button onclick="approveDate('${d.id}')">Approve</button>
+      <button onclick="rejectDate('${d.id}')">Reject</button>
+    </div>`;
+  });
+}
+window.approveDate=async id=>{ 
+  const docRef=doc(db,"donors",id); 
+  const docSnap=await getDoc(docRef);
+  await updateDoc(docRef,{lastDonate:docSnap.data()?.requestedDate, dateChanged:false, requestedDate:null});
+  loadDateChangeList(); loadDonors();
+}
+window.rejectDate=async id=>{ await updateDoc(doc(db,"donors",id),{dateChanged:false, requestedDate:null}); loadDateChangeList(); }
+
+// Export CSV
+exportBtn.addEventListener("click", async ()=>{
+  const q=query(collection(db,"donors")); const snap=await getDocs(q);
+  let csv="Name,Blood,Phone,Address,LastDonate,Approved\n";
+  snap.forEach(d=>{ const x=d.data(); csv+=`${x.name},${x.blood},${x.phone},${x.address},${x.lastDonate},${x.approved}\n`; });
+  const blob=new Blob([csv],{type:"text/csv"}); const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download="donors.csv"; a.click(); URL.revokeObjectURL(url);
+});
+
+// Init
+loadDonors(); loadPending(); loadDateChangeList();
+document.getElementById("year").innerText=new Date().getFullYear();
+</script>
+<!-- Service Worker Register -->
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}
+if ("launchQueue" in window) {
+  launchQueue.setConsumer(async (launchParams) => {
+    if (!launchParams.files.length) return;
+    console.log("Shared file received:", launchParams.files);
+  });
+}
+</script>
+</body>
+</html>
